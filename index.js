@@ -6,6 +6,37 @@ const beatRelation = {
     "Paper": "Rock",
 }
 
+const selectionButtons = document.querySelectorAll(".card-selection");
+const resultsDiv = document.querySelector("#results");
+const playerScoreSpan = resultsDiv.querySelector("#player-score");
+const computerScoreSpan = resultsDiv.querySelector("#computer-score");
+const currentResultParagraph = resultsDiv.querySelector("#current-result");
+
+const gameState = {
+    playerScore: 0,
+    computerScore: 0,
+    draws: 0
+};
+
+selectionButtons.forEach((selectionButton) => {
+    selectionButton.addEventListener("click", game);
+});
+
+function showResults(message) {
+    currentResultParagraph.textContent = message;
+    playerScoreSpan.textContent = gameState.playerScore;
+    computerScoreSpan.textContent = gameState.computerScore;
+}
+
+function updateGameState(code) {
+    if (code === 0) {
+        gameState.draws += 1;
+    } else if (code === 1) {
+        gameState.playerScore += 1;
+    } else {
+        gameState.computerScore += 1;
+    }
+}
 
 function getComputerChoice() {
     const indexChoice = Math.floor(Math.random() * possibleChoices.length);
@@ -16,39 +47,45 @@ function getComputerChoice() {
 function playRound(playerSelection, computerSelection) {
     playerSelection = capitalize(playerSelection);
     if (playerSelection === computerSelection) {
-        return `Draw! ${playerSelection} and ${computerSelection}`
+        return {
+            code: 0,
+            message: `Draw! ${playerSelection} and ${computerSelection}`
+        };
     }
 
     if (beatRelation[playerSelection] === computerSelection) {
-        return `You Won! ${playerSelection} beats ${computerSelection}`;
+        return {
+            code: 1,
+            message: `You Won! ${playerSelection} beats ${computerSelection}`
+        };
     }
 
-    return `You Lose! ${computerSelection} beats ${playerSelection}`;
+    return {
+        code: -1,
+        message: `You Lose! ${computerSelection} beats ${playerSelection}`
+    };
 }
 
-function game(numberOfPlays = 5) {
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 1; i <= numberOfPlays; i++) {
-        const resultString = playRound(prompt("Rock, Paper or Scissors?"), getComputerChoice());
-        if (resultString.includes("Won")) {
-            playerScore++;
-        } else if (resultString.includes("Lose")) {
-            computerScore++;
-        }
-        console.log(`${resultString}\nPlayer Score: ${playerScore}\tComputer Score: ${computerScore}`);
-    }
-    if (playerScore === computerScore) {
-        console.log("Final result: Draw!!!!");
-        return;
+function game(event) {
+    const result = playRound(event.target.id, getComputerChoice());
+    updateGameState(result.code);
+    showResults(result.message);
+
+    if (gameState.playerScore === 5) {
+        endGame("Player");
     }
 
-    if (playerScore > computerScore) {
-        console.log("Final result: You Won!!!!");
-        return;
+    if (gameState.computerScore === 5) {
+        endGame("Computer");
     }
+}
 
-    console.log("Final result: The Computer Won!!!!");
+function endGame(winner) {
+    alert(`The ${winner} won!!`)
+    
+    selectionButtons.forEach((selectionButton) => {
+        selectionButton.removeEventListener("click", game);
+    });
 }
 
 function capitalize(word) {
@@ -57,4 +94,4 @@ function capitalize(word) {
 
 
 
-game(5);
+// game(5);
