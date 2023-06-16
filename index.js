@@ -6,41 +6,60 @@ const beatRelation = {
     "Paper": "Rock",
 }
 
-const selectionButtons = document.querySelectorAll(".card-selection");
-const resultsDiv = document.querySelector("#results");
-const playerScoreSpan = resultsDiv.querySelector("#player-score");
-const computerScoreSpan = resultsDiv.querySelector("#computer-score");
-const currentResultParagraph = resultsDiv.querySelector("#current-result");
-
 const gameState = {
     playerScore: 0,
     computerScore: 0,
     draws: 0
 };
 
-selectionButtons.forEach((selectionButton) => {
-    selectionButton.addEventListener("click", game);
-});
+const selectionButtons = document.querySelectorAll(".player-selection .cards button");
+const resultsContainer = document.querySelector("#results-container");
+const playerScoreSpan = resultsContainer.querySelector("#player-score");
+const computerScoreSpan = resultsContainer.querySelector("#computer-score");
+const currentResultParagraph = resultsContainer.querySelector("#current-result");
+const finalWinner = resultsContainer.querySelector("#final-winner");
 
-function showResults(message) {
-    currentResultParagraph.textContent = message;
-    playerScoreSpan.textContent = gameState.playerScore;
-    computerScoreSpan.textContent = gameState.computerScore;
+const resetButton = document.querySelector("#reset");
+
+resetButton.addEventListener("click", resetGame);
+
+
+function activateSelectionButtons() {
+    selectionButtons.forEach((selectionButton) => {
+        selectionButton.addEventListener("click", game);
+        selectionButton.disabled = false;
+        selectionButton.classList.add("hoverable");
+    });
 }
 
-function updateGameState(code) {
-    if (code === 0) {
-        gameState.draws += 1;
-    } else if (code === 1) {
-        gameState.playerScore += 1;
-    } else {
-        gameState.computerScore += 1;
-    }
+
+function deactivateSelectionButtons() {
+    selectionButtons.forEach((selectionButton) => {
+        selectionButton.removeEventListener("click", game);
+        selectionButton.disabled = true;
+        selectionButton.classList.remove("hoverable");
+    });
 }
+
 
 function getComputerChoice() {
     const indexChoice = Math.floor(Math.random() * possibleChoices.length);
     return possibleChoices[indexChoice];
+}
+
+
+function removeSelectedClassToComputerSelection() {
+    const currentComputerSelection = document.querySelector(`.computer-selection .cards .selected`);
+    if (currentComputerSelection) {
+        currentComputerSelection.classList.remove("selected");
+    }
+}
+
+
+function showComputerSelection(selection) {
+    removeSelectedClassToComputerSelection();
+    const selectedComputerButton = document.querySelector(`.computer-selection .cards .${selection.toLowerCase()}`);
+    selectedComputerButton.classList.add("selected");
 }
 
 
@@ -56,20 +75,45 @@ function playRound(playerSelection, computerSelection) {
     if (beatRelation[playerSelection] === computerSelection) {
         return {
             code: 1,
-            message: `You Won! ${playerSelection} beats ${computerSelection}`
+            message: `You Won this round! ${playerSelection} beats ${computerSelection}`
         };
     }
 
     return {
         code: -1,
-        message: `You Lose! ${computerSelection} beats ${playerSelection}`
+        message: `You Lose this round! ${computerSelection} beats ${playerSelection}`
     };
 }
 
+function updateGameState(code) {
+    if (code === 0) {
+        gameState.draws += 1;
+    } else if (code === 1) {
+        gameState.playerScore += 1;
+    } else {
+        gameState.computerScore += 1;
+    }
+}
+
+function showCurrentScores() {
+    playerScoreSpan.textContent = gameState.playerScore;
+    computerScoreSpan.textContent = gameState.computerScore;
+}
+
+function showResults(message, code) {
+    currentResultParagraph.textContent = message;
+    currentResultParagraph.style.color = code === -1 ? "red" : code === 1 ? "green" : "yellow";
+    showCurrentScores();
+}
+
+
 function game(event) {
-    const result = playRound(event.target.id, getComputerChoice());
+    const playerChoice = event.target.classList[0];
+    const computerChoice = getComputerChoice();
+    const result = playRound(playerChoice, computerChoice);
+    showComputerSelection(computerChoice)
     updateGameState(result.code);
-    showResults(result.message);
+    showResults(result.message, result.code);
 
     if (gameState.playerScore === 5) {
         endGame("Player");
@@ -80,13 +124,25 @@ function game(event) {
     }
 }
 
+
 function endGame(winner) {
-    alert(`The ${winner} won!!`)
+    finalWinner.textContent = winner;
     
-    selectionButtons.forEach((selectionButton) => {
-        selectionButton.removeEventListener("click", game);
-    });
+    deactivateSelectionButtons();
 }
+
+
+function resetGame() {
+    currentResultParagraph.textContent = "";
+    gameState.playerScore = 0;
+    gameState.computerScore = 0;
+    gameState.draws = 0;
+    showCurrentScores();
+    finalWinner.textContent = "";
+    removeSelectedClassToComputerSelection();
+    activateSelectionButtons();
+}
+
 
 function capitalize(word) {
     return word[0].toUpperCase() + word.slice(1).toLowerCase();
@@ -94,4 +150,4 @@ function capitalize(word) {
 
 
 
-// game(5);
+activateSelectionButtons();

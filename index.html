@@ -4,16 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./index.js" defer></script>
 </head>
 <body>
-    <button class="card-selection" id="rock">Rock</button>
-    <button class="card-selection" id="paper">Paper</button>
-    <button class="card-selection" id="scissors">Scissors</button>
-    <div id="results">
-        <p id="current-result"></p>
-        <p>Player score: <span id="player-score">0</span></p>
-        <p>Computer score: <span id="computer-score">0</span></p>
+    <div class="container">
+        <div id="results-container">
+            <div id="round-result">
+                <p id="current-result"></p>
+                <p>Player score: <span id="player-score">0</span></p>
+                <p>Computer score: <span id="computer-score">0</span></p>
+            </div>
+            <div id="final-result">
+                <h3>Final Winner: <span id="final-winner"></span></h3>
+                <button id="reset">Reset</button>
+            </div>
+        </div>
+        <div class="selections-container">
+            <div class="player-selection">
+                <h2>Your selection</h2>
+                <div class="cards">
+                    <button class="rock"></button>
+                    <button class="paper"></button>
+                    <button class="scissors"></button>
+                </div>
+            </div>
+            <div class="computer-selection">
+                <h2>Computer selection</h2>
+                <div class="cards">
+                    <button class="rock" disabled></button>
+                    <button class="paper" disabled></button>
+                    <button class="scissors" disabled></button>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="./index.js"></script>
 </body>
 </html>

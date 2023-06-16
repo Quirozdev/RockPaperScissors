@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    background-color: #15202B;
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+.selections-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.player-selection, .computer-selection {
+    text-align: center;
+    border: 2px solid #22303c;
+}
+
+.hoverable:hover, .selected {
+    border: 4px solid yellowgreen;
+}
+
+#results-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    min-width: 300px;
+    text-align: center;
+}
+
+.cards {
+    display: flex;
+    gap: 32px;
+    margin: 32px;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.cards button {
+    background-color: black;
+}
+
+#round-result {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#current-result {
+    font-size: 18px;
+}
+
+.rock {
+    background-image: url("./images/rock.jpg");
+    
+}
+
+.paper {
+    background-image: url("./images/paper.jpg");
+}
+
+.scissors {
+    background-image: url("./images/scissors.png");
+}
+
+.rock, .paper, .scissors {
+    width: 200px;
+    min-width: 100px;
+    aspect-ratio: 1 / 1;
+    background-size: cover;
+    background-position: center;
+}
+
+#final-result {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 16px;
+}
+
+#final-winner {
+    font-size: 24px;
+    border-bottom: 2px solid teal;
+    color: wheat;
+}
+
+#reset {
+    padding: 8px 16px;
+    border: 2px solid seagreen;
+    color: white;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#reset:hover {
+    background-color: white;
+    color: seagreen;
+}
